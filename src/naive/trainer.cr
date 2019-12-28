@@ -11,11 +11,9 @@ module Naive
       @data.increase_class(class_name)
 
       tokens = @tokeniser.tokenise(text)
-      tokens.each { |token|
-        token = @tokeniser.remove_stop_words(token)
-        token = @tokeniser.remove_punctuation(token)
+      process_all(tokens) do |token|
         @data.increase_token(token, class_name)
-      }
+      end
     end
   end
 end
