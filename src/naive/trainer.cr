@@ -7,7 +7,7 @@ module Naive
     end
 
     # enhances trained data using the given text and class
-    def train(text : String, class_name : String)
+    def train(text : String, class_name : String) : Array of String
       @data.increase_class(class_name)
 
       tokens = @tokeniser.tokenise(text)
