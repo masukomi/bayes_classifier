@@ -2,7 +2,7 @@ module Naive
   class Trainer
     getter data
 
-    def initialize(@tokeniser : Tokeniser)
+    def initialize(@tokenizer : Tokenizer)
       @data = TrainedData.new
     end
 
@@ -10,7 +10,7 @@ module Naive
     def train(text : String, class_name : String) : Array of String
       @data.increase_class(class_name)
 
-      tokens = @tokeniser.tokenise(text)
+      tokens = @tokenizer.tokenize(text)
       process_all(tokens) do |token|
         @data.increase_token(token, class_name)
       end

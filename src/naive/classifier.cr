@@ -3,7 +3,7 @@ require "./bulk_processor.cr"
 module Naive
   class Classifier < BulkProcessor
     def initialize(@trained_data : TrainedData,
-                   @tokeniser : Tokeniser)
+                   @tokenizer : Tokenizer)
       @data = trained_data
       @defaultProb = 0.000000001
     end
@@ -27,7 +27,7 @@ module Naive
       classes = @data.get_classes
 
       # only unique tokens
-      tokens = @tokeniser.tokenise(text).uniq
+      tokens = @tokenizer.tokenize(text).uniq
       probabilities_of_classes = {} of String => Float64
 
       classes.each { |className|
@@ -48,7 +48,10 @@ module Naive
     end
 
     def get_prior(className : String)
-      return @data.get_class_doc_count(className).as(Int32).to_f64 / @data.get_doc_count.to_f64
+      return @data\
+        .get_class_doc_count(className)\
+        .as(Int32)\
+        .to_f64 / @data.get_doc_count.to_f64
     end
   end
 end
