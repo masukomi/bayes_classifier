@@ -55,11 +55,11 @@ describe BayesianClassifier::Classifier do
     classification = news_classifier.classify("Obama is")
 
     # testing floats sucks
-    classification["health"].should be > 6.0
-    classification["health"].should be < 7.0
+    classification["health"].should be > 1.6e-10
+    classification["health"].should be < 1.7e-10
 
-    classification["politics"].should be > 2.0
-    classification["politics"].should be <= 3.0
+    classification["politics"].should be > 0.083
+    classification["politics"].should be <= 0.084
   end
 
 end
