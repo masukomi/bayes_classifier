@@ -1,4 +1,4 @@
-module Naive
+module BayesianClassifier
   class Trainer
     getter data
 

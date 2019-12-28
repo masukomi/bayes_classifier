@@ -1,4 +1,4 @@
-module Naive
+module BayesianClassifier
   abstract class BulkProcessor
     def process_all(items : Indexable(T), &block : T -> R) forall T, R
       results = Array(R).new(items.size) { r = uninitialized R }

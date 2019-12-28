@@ -1,6 +1,6 @@
 require "./bulk_processor.cr"
 
-module Naive
+module BayesianClassifier
   class Tokenizer < BulkProcessor
     def initialize(@stop_words : Array(String) = [] of String,
                    @junk_characters : Regex = /[:\?!#%&3.\[\]\/+]/,
