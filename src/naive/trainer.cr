@@ -7,14 +7,14 @@ module Naive
     end
 
     # enhances trained data using the given text and class
-    def train(text : String, className : String)
-      @data.increaseClass(className)
+    def train(text : String, class_name : String)
+      @data.increase_class(class_name)
 
       tokens = @tokeniser.tokenise(text)
       tokens.each { |token|
         token = @tokeniser.remove_stop_words(token)
         token = @tokeniser.remove_punctuation(token)
-        @data.increaseToken(token, className)
+        @data.increase_token(token, class_name)
       }
     end
   end

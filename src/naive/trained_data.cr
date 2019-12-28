@@ -1,47 +1,49 @@
 module Naive
   class TrainedData
-    getter docCountOfClasses, frequencies
+    getter doc_count_of_classes, frequencies
 
     def initialize
-      @docCountOfClasses = Hash(String, Int32).new
+      @doc_count_of_classes = Hash(String, Int32).new
       @frequencies = Hash(String, Hash(String, Int32)).new
     end
 
-    def increaseClass(className : String, byAmount : Int = 1)
-      @docCountOfClasses[className] = @docCountOfClasses.fetch(className, 0) + 1
+    def increase_class(class_name : String, byAmount : Int = 1)
+      @doc_count_of_classes[class_name] = @doc_count_of_classes.fetch(class_name, 0) + 1
     end
 
-    def increaseToken(token : String, className : String, byAmount : Int = 1)
+    def increase_token(token : String,
+                       class_name : String,
+                       byAmount : Int = 1)
       if !@frequencies.keys.any? { |key| key == token }
         @frequencies[token] = {} of String => Int32
       end
 
-      @frequencies[token][className] = @frequencies[token].fetch(className, 0) + 1
+      @frequencies[token][class_name] = @frequencies[token].fetch(class_name, 0) + 1
     end
 
     # returns all documents count
-    def getDocCount
-      return @docCountOfClasses.values.sum
+    def get_doc_count
+      return @doc_count_of_classes.values.sum
     end
 
     # returns the names of the available classes as list
-    def getClasses
-      return @docCountOfClasses.keys
+    def get_classes
+      return @doc_count_of_classes.keys
     end
 
     # returns document count of the class.
     # If class is not available, it returns Nil
-    def getClassDocCount(className : String)
-      return @docCountOfClasses.fetch(className, Nil)
+    def get_class_doc_count(class_name : String)
+      return @doc_count_of_classes.fetch(class_name, Nil)
     end
 
-    def getFrequency(token : String, className : String) : Int32 | Nil
-      foundToken = @frequencies[token]?
+    def get_frequency(token : String, class_name : String) : Int32 | Nil
+      found_token = @frequencies[token]?
 
-      if foundToken.nil?
+      if found_token.nil?
         raise NotSeen.new
       else
-        frequency = foundToken[className]?
+        frequency = found_token[class_name]?
         return frequency
       end
     end
