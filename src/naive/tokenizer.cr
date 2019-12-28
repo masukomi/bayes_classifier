@@ -7,7 +7,7 @@ module Naive
                    @split_regexp : Regex = /\w+/)
     end
 
-    def tokenise(text : String)
+    def tokenise(text : String) : Array of String
       (process_all(text.downcase.split(@split_regexp)) do |x|
         remove_junk_characters(x)
       end) - @stop_words
