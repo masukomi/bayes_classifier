@@ -8,7 +8,7 @@ module BayesianClassifier
       @defaultProb = 0.000000001
     end
 
-    def classify(text : String) : Hash of String, Float64
+    def classify(text : String) : Hash(String, Float64)
       document_count = @data.get_doc_count
       classes = @data.get_classes
 

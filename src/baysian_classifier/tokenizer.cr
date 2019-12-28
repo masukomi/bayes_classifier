@@ -7,7 +7,7 @@ module BayesianClassifier
                    @split_regexp : Regex = /\w+/)
     end
 
-    def tokenize(text : String) : Array of String
+    def tokenize(text : String) : Array(String)
       (process_all(text.downcase.split(@split_regexp)) do |x|
         remove_junk_characters(x)
       end) - @stop_words
