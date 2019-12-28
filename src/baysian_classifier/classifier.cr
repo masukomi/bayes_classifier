@@ -8,21 +8,6 @@ module BayesianClassifier
       @defaultProb = 0.000000001
     end
 
-    def get_token_probability(token : String,
-                              class_name : String) : Float64
-      # p(token|Class_i)
-      class_document_count = @data.get_class_doc_count(class_name)
-      # if the token is not seen in the training set, so not indexed,
-      # then we return None not to include it into calculations.
-      token_frequency = @data.get_frequency(token, class_name)
-      if token_frequency.nil?
-        return @defaultProb
-      else
-        probablity = token_frequency.to_f64 / class_document_count.as(Int32).to_f64
-        return probablity
-      end
-    end
-
     def classify(text : String) : Hash of String, Float64
       document_count = @data.get_doc_count
       classes = @data.get_classes
@@ -48,11 +33,26 @@ module BayesianClassifier
       return probabilities_of_classes
     end
 
-    def get_prior(class_name : String)
+    private def get_prior(class_name : String)
       return @data\
         .get_class_doc_count(class_name)\
         .as(Int32)\
         .to_f64 / @data.get_doc_count.to_f64
     end
+    private def get_token_probability(token : String,
+                              class_name : String) : Float64
+      # p(token|Class_i)
+      class_document_count = @data.get_class_doc_count(class_name)
+      # if the token is not seen in the training set, so not indexed,
+      # then we return None not to include it into calculations.
+      token_frequency = @data.get_frequency(token, class_name)
+      if token_frequency.nil?
+        return @defaultProb
+      else
+        probablity = token_frequency.to_f64 / class_document_count.as(Int32).to_f64
+        return probablity
+      end
+    end
+
   end
 end
