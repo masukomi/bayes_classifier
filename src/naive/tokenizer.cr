@@ -1,21 +1,20 @@
+require "./bulk_processor.cr"
+
 module Naive
-  class Tokeniser
-    def initialize(@stop_words : Array(String) = [] of String, @signs : Array(String) = ["?!#%&"])
+  class Tokeniser < BulkProcessor
+    def initialize(@stop_words : Array(String) = [] of String,
+                   @junk_characters : Regex = /[:\?!#%&3.\[\]\/+]/,
+                   @split_regexp : Regex = /\w+/)
     end
 
     def tokenise(text : String)
-      return text.downcase.split(" ")
+      (process_all(text.downcase.split(@split_regexp)) do |x|
+        remove_junk_characters(x)
+      end) - @stop_words
     end
 
-    def remove_stop_words(token : String)
-      @stop_words.includes?(token) ? "stop_word" : token
-    end
-
-    def remove_punctuation(token : String)
-      @signs.each { |sign|
-        sign.each_char { |s| token = token.sub(s, "") }
-      }
-      return token
+    def remove_junk_characters(token : String)
+      token.gsub(@junk_characters, "")
     end
   end
 end

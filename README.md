@@ -2,6 +2,13 @@
 
 Naive Bayes classifier for Crystal (based on [muatik's classifier](https://github.com/muatik/naive-bayes-classifier)).
 
+Note: the tokenizer that comes with this library is designed for English.
+
+Notable Tokenizer limitations:
+
+* No stripping of non-English punctuation (by default).
+* Doesn't correctly tokenize languages that don't separated words with spaces.
+
 ## Installation
 
 
