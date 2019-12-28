@@ -13,7 +13,7 @@ module Naive
       end) - @stop_words
     end
 
-    def remove_junk_characters(token : String)
+    def remove_junk_characters(token : String) : String
       token.gsub(@junk_characters, "")
     end
   end
