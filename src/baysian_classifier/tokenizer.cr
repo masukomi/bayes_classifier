@@ -4,7 +4,7 @@ module BayesianClassifier
   class Tokenizer < BulkProcessor
     def initialize(@stop_words : Array(String) = [] of String,
                    @junk_characters : Regex = /[:\?!#%&3.\[\]\/+]/,
-                   @split_regexp : Regex = /\w+/)
+                   @split_regexp : Regex = /\s+/)
     end
 
     def tokenize(text : String) : Array(String)
