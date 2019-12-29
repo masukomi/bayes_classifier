@@ -84,4 +84,16 @@ describe BayesClassifier::Classifier do
     classification.keys.first.should(eq("health"))
   end
 
+  it "it should not blow up on unknown categories" do
+    tokenizer = BayesClassifier::Tokenizer.new()
+    trainer = BayesClassifier::Trainer.new(tokenizer)
+
+    news_classifier = BayesClassifier::Classifier.new(
+                                          trainer.data, tokenizer)
+    classification = news_classifier.classify("Obama is", ["health"])
+    classification.keys.size.should(eq(1))
+    classification.keys.first.should(eq("health"))
+  end
+
+
 end

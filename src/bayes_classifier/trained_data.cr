@@ -33,18 +33,18 @@ module BayesClassifier
 
     # returns document count of the class.
     # If class is not available, it returns Nil
-    def get_class_doc_count(class_name : String)
-      return @doc_count_of_classes.fetch(class_name, Nil)
+    def get_class_doc_count(class_name : String) : Int32
+      return @doc_count_of_classes.fetch(class_name, 0)
     end
 
-    def get_frequency(token : String, class_name : String) : Int32 | Nil
+    def get_frequency(token : String, class_name : String) : Int32
       found_token = @frequencies[token]?
 
       if found_token.nil?
-        raise NotSeen.new
+        return 0
       else
         frequency = found_token[class_name]?
-        return frequency
+        return frequency || 0
       end
     end
   end

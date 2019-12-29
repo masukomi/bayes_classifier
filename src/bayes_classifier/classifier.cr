@@ -46,7 +46,7 @@ module BayesClassifier
       # if the token is not seen in the training set, so not indexed,
       # then we return None not to include it into calculations.
       token_frequency = @data.get_frequency(token, class_name)
-      if token_frequency.nil?
+      if token_frequency == 0
         return @defaultProb
       else
         probablity = token_frequency.to_f64 / class_document_count.as(Int32).to_f64
