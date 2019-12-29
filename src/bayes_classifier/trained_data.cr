@@ -27,7 +27,7 @@ module BayesClassifier
     end
 
     # returns the names of the available classes as list
-    def get_classes
+    def get_classes : Array(String)
       return @doc_count_of_classes.keys
     end
 
