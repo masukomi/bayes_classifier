@@ -1,3 +1,5 @@
+WARNING: I'm in the middle of a major refactoring. The API should be stable but I make no guarantees for the next few days ;) (Dec 29, 2019)
+
 # Bayes Classifier
 
 Naïve [Bayesian Classifier](https://en.wikipedia.org/wiki/Naive_Bayes_classifier) for Crystal
