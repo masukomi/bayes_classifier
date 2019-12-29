@@ -1,13 +1,15 @@
-# naive
+# Bayes Classifier
 
-Naive Bayes classifier for Crystal (based on [muatik's classifier](https://github.com/muatik/naive-bayes-classifier)).
+Naïve [Bayesian Classifier](https://en.wikipedia.org/wiki/Naive_Bayes_classifier) for Crystal
 
-Note: the tokenizer that comes with this library is designed for English.
+> In machine learning, naïve Bayes classifiers are a family of simple "probabilistic classifiers" based on applying Bayes' theorem with strong (naïve) independence assumptions between the features. They are among the simplest Bayesian network models. - [Wikipedia](https://en.wikipedia.org/wiki/Naive_Bayes_classifier)
 
-Notable Tokenizer limitations:
+At a high level, usage is very simple. First you "train" your classifier by providing a piece of text and telling it what "category" it belongs to. The more training data you have, the better your results would be. Then, after training you pass it a new piece of text, and it provides you a number between zero and one indicating how probable it is that the text belongs to the given category. The higher the number the more probable it is that it belongs to the specified category. 
 
-* No stripping of non-English punctuation (by default).
-* Doesn't correctly tokenize languages that don't separated words with spaces.
+Deciding what probability is "enough" depends a lot on what you're using it for. If someone may go to jail based on your probability score the threshold should be _very_ high. If you're just determining if an article is "interesting" to a user then a much lower probability would not only be acceptable, but preferred. 
+
+
+This particular implementation leverage's Crystal's concurrency to efficiently process large amounts of text quickly, but it _does not_ included a mechanism for persisting the results of training. If you don't add that you'll need to re-train it every time you run it. 
 
 ## Installation
 
@@ -17,7 +19,7 @@ Add this to your application's `shard.yml`:
 ```yaml
 dependencies:
   gsl:
-    github: ruivieira/naivebayes
+    github: masukomi/bayes_classifier
 ```
 
 
@@ -25,13 +27,13 @@ dependencies:
 
 
 ```crystal
-require "naive"
+require "bayesian_classifier"
 
-tokeniser = Naive::Tokeniser.new
+tokeniser = BayesClassifier::Tokeniser.new
 
-newsTrainer = Naive::Trainer.new(tokeniser)
+trainer = BayesClassifier::Trainer.new(tokeniser)
 
-newsSet = [
+news_set = [
   {"text" => "not to eat too much is not enough to lose weight", "category" => "health"},
   {"text" => "Russia try to invade Ukraine", "category" => "politics"},
   {"text" => "do not neglect exercise", "category" => "health"},
@@ -40,34 +42,57 @@ newsSet = [
   {"text" => "you should not eat much", "category" => "health"},
 ]
 
-newsSet.each { |news|
-  newsTrainer.train(news["text"], news["category"])
+news_set.each { |news|
+  trainer.train(news["text"], news["category"])
 }
 
-newsClassifier = Naive::Classifier.new(newsTrainer.data, tokeniser)
+classifier = BayesClassifier::Classifier.new(trainer.data, tokenizer)
 
-classification = newsClassifier.classify("Obama is")
+classification = classifier.classify("Obama is")
 
 puts classification # => {"health" => 1.6666666666666666e-10, "politics" => 0.083333333333333329}
 ```
 
-Warning:
+If you only care about the probability of one, or some, categories in the training data, you can expedite the classification of a piece of text by specifying the list of categories to consider.
 
-- Not fully test
-- Pre-release (API will break)
-- Not fit for production
+```
+classification = classifier.classify("Obama is", ["health"])
+#=> {"health" => 1.6666666666666666e-10}
+```
 
+## Tokenizer Notes
+If you wish to eliminate certain words from your categorization, and/or process non-English languages, you will need to pass different arguments to the Tokenizer. It's initializer allows you to specify [stop words](https://en.wikipedia.org/wiki/Stop_words) (words to remove from consideration), junk characters (punctuation that isn't part of spelling), and depending on language, you may need to specify a different regexp to split words on. 
+
+Note that junk characters are currently removed _after_ splitting the string. So if you added hyphen as a junk character the sentence "A full-length portrait" would be tokenized as ["a", "full length", "portrait"].
+
+The Tokenizer's Initializer
+```ruby
+    def initialize(@stop_words : Array(String) = [] of String,
+                   @junk_characters : Regex = /[:\?!#%&3.\[\]\/+]/,
+                   @split_regexp : Regex = /\s+/)
+    end
+```
+
+There is a default set of English stop words encoded as the `ENGLISH_STOP_WORDS` constant. To classify english text you'd probably want to initialize your tokenizer like this:
+
+```ruby
+tokenizer=BayesClassifier::Tokenizer.new(
+  BayesClassifier::Tokenizer::ENGLISH_STOP_WORDS
+)
+```
 
 
 ## Contributing
 
-1. Fork it ( https://github.com/ruivieira/crystal-gsl/fork )
+1. Fork it ( <https://github.com/masukomi/bayesian_classifier/fork> )
 2. Create your feature branch (git checkout -b my-new-feature)
+3. Add your code and a unit test.
 3. Commit your changes (git commit -am 'Add some feature')
 4. Push to the branch (git push origin my-new-feature)
 5. Create a new Pull Request
 
 ## Contributors
 
-- [ruivieira](https://github.com/ruivieira) Rui Vieira - creator, maintainer
+- [masukomi](https://github.com/masukomi) masukomi - cleaner & maintainer
+- [ruivieira](https://github.com/ruivieira) Rui Vieira - crystal port
 - [muatik](https://github.com/muatik) muatik - original Python code
