@@ -1,6 +1,6 @@
 require "./bulk_processor.cr"
 
-module BayesianClassifier
+module BayesClassifier
   class Trainer < BulkProcessor
     getter data
 

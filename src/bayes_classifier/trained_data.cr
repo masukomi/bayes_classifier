@@ -1,4 +1,4 @@
-module BayesianClassifier
+module BayesClassifier
   class TrainedData
     getter doc_count_of_classes, frequencies
 

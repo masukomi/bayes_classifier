@@ -1,6 +1,6 @@
 require "./bulk_processor.cr"
 
-module BayesianClassifier
+module BayesClassifier
   class Classifier < BulkProcessor
     def initialize(@trained_data : TrainedData,
                    @tokenizer : Tokenizer)

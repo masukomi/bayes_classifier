@@ -1,17 +1,17 @@
 require "../spec_helper"
 
-describe BayesianClassifier::Classifier do
+describe BayesClassifier::Classifier do
   it "should initialize without error" do
-    data = BayesianClassifier::TrainedData.new()
-    tokenizer = BayesianClassifier::Tokenizer.new()
-    c = BayesianClassifier::Classifier.new(data, tokenizer)
+    data = BayesClassifier::TrainedData.new()
+    tokenizer = BayesClassifier::Tokenizer.new()
+    c = BayesClassifier::Classifier.new(data, tokenizer)
     c.should be_truthy
   end
 
 
   it "should classify correctly" do
-    tokenizer = BayesianClassifier::Tokenizer.new()
-    trainer = BayesianClassifier::Trainer.new(tokenizer)
+    tokenizer = BayesClassifier::Tokenizer.new()
+    trainer = BayesClassifier::Trainer.new(tokenizer)
     news_set = [
       {"text" => "not to eat too much is not enough to lose weight", "category" => "health"},
       {"text" => "Russia try to invade Ukraine", "category" => "politics"},
@@ -25,7 +25,7 @@ describe BayesianClassifier::Classifier do
       trainer.train(news["text"], news["category"])
     end
 
-    news_classifier = BayesianClassifier::Classifier.new(
+    news_classifier = BayesClassifier::Classifier.new(
                                           trainer.data, tokenizer)
 
     classification = news_classifier.classify("Obama is")
@@ -34,8 +34,8 @@ describe BayesianClassifier::Classifier do
     classification.keys.size.should(eq(2))
   end
   it "should calculate probabilities" do
-    tokenizer = BayesianClassifier::Tokenizer.new()
-    trainer = BayesianClassifier::Trainer.new(tokenizer)
+    tokenizer = BayesClassifier::Tokenizer.new()
+    trainer = BayesClassifier::Trainer.new(tokenizer)
     news_set = [
       {"text" => "not to eat too much is not enough to lose weight", "category" => "health"},
       {"text" => "Russia try to invade Ukraine", "category" => "politics"},
@@ -49,7 +49,7 @@ describe BayesianClassifier::Classifier do
       trainer.train(news["text"], news["category"])
     end
 
-    news_classifier = BayesianClassifier::Classifier.new(
+    news_classifier = BayesClassifier::Classifier.new(
                                           trainer.data, tokenizer)
 
     classification = news_classifier.classify("Obama is")
