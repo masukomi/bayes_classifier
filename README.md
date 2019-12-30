@@ -105,7 +105,7 @@ all the square brackets, angle brackets, and exclamation points.
 Because parsing markdown is a fairly common thing these days, the tokenizer has a convenience method for this:
 
 ```
-  tokenizer = BayesClassifier::Tokenizer.markdown_tokenizer
+  tokenizer = BayesClassifier::Tokenizer.english_markdown_tokenizer
 ```
 
 ## Contributing

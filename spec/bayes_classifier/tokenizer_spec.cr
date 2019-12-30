@@ -74,7 +74,7 @@ describe BayesClassifier::Tokenizer do
 
   end
   it "should provide a markdown tokenizer" do
-    tokenizer = BayesClassifier::Tokenizer.markdown_tokenizer
+    tokenizer = BayesClassifier::Tokenizer.english_markdown_tokenizer
     sentence="This has [a link](https://example.com) in it and an ![image](https://example.com/foo.jpg) and a <https://example.com/other_link>!"
     tokens = tokenizer.tokenize(sentence)
     tokens.includes?("link").should(be_true)
