@@ -14,6 +14,19 @@ describe BayesClassifier::Tokenizer do
     tokens = tokenizer.tokenize(sentence)
     tokens.includes?("words").should be_true
   end
+  it "should remove multiple junk characters" do
+    tokenizer = BayesClassifier::Tokenizer.new()
+    sentence="These are some words!!!"
+    tokens = tokenizer.tokenize(sentence)
+    tokens.includes?("words").should be_true
+  end
+
+  it "should not remove junk in the middle of words" do
+    tokenizer = BayesClassifier::Tokenizer.new()
+    sentence="new release of v1.0.0 is awesome!"
+    tokens = tokenizer.tokenize(sentence)
+    tokens.includes?("v1.0.0").should be_true
+  end
   it "should downcase everything" do
     tokenizer = BayesClassifier::Tokenizer.new()
     sentence="These are Some words!"
@@ -44,6 +57,21 @@ describe BayesClassifier::Tokenizer do
     tokens = tokenizer.tokenize(sentence)
     tokens.size.should(eq(1))
     tokens.first.should(eq("words"))
+  end
+  it "should allow complex splitting" do
+    tokenizer = BayesClassifier::Tokenizer.new(
+                                            [""],
+                                            /[:\?!#%&3.\[\]\/+()]$/,
+                                            /\s+|\[|\]\(|!|<|>/ )
+    sentence="This has [a link](https://example.com) in it and an ![image](https://example.com/foo.jpg) and a <https://example.com/other_link>!"
+    tokens = tokenizer.tokenize(sentence)
+    tokens.includes?("link").should(be_true)
+    tokens.includes?("a").should(be_true)
+    tokens.includes?("https://example.com").should(be_true)
+    tokens.includes?("https://example.com/foo.jpg").should(be_true)
+    tokens.includes?("image").should(be_true)
+    tokens.includes?("https://example.com/other_link").should(be_true)
+
   end
 end
 

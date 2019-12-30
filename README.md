@@ -29,7 +29,7 @@ dependencies:
 
 
 ```crystal
-require "bayesian_classifier"
+require "bayes_classifier"
 
 tokeniser = BayesClassifier::Tokeniser.new
 
@@ -65,23 +65,42 @@ classification = classifier.classify("Obama is", ["health"])
 ## Tokenizer Notes
 If you wish to eliminate certain words from your categorization, and/or process non-English languages, you will need to pass different arguments to the Tokenizer. It's initializer allows you to specify [stop words](https://en.wikipedia.org/wiki/Stop_words) (words to remove from consideration), junk characters (punctuation that isn't part of spelling), and depending on language, you may need to specify a different regexp to split words on. 
 
-Note that junk characters are currently removed _after_ splitting the string. So if you added hyphen as a junk character the sentence "A full-length portrait" would be tokenized as ["a", "full length", "portrait"].
+Note that junk characters are currently removed _after_ splitting the string, and the default regular expression limits them to the end of the string. This has 2 consequences:
+
+First, removal _after_ splitting means that So if you added hyphen as a junk character (and removed the `$` at the end) the sentence "A full-length portrait" would be tokenized as ["a", "full length", "portrait"].
+
+Second, the `$` at the end of the regexp means that, by default junk characters will only be removed from the end ofa word. So, `"the end!!!"` becomes `["the", "end"]` and `"v1.0.1"` stays `"v1.0.1"`
 
 The Tokenizer's Initializer
 ```ruby
-    def initialize(@stop_words : Array(String) = [] of String,
-                   @junk_characters : Regex = /[:\?!#%&3.\[\]\/+]/,
-                   @split_regexp : Regex = /\s+/)
+    def initialize(@stop_words      : Array(String) = [""],
+                   @junk_characters : Regex = /[:\?!#%&3.\[\]\/+]+$/,
+                   @split_regexp    : Regex = /\s+/)
     end
 ```
 
-There is a default set of English stop words encoded as the `ENGLISH_STOP_WORDS` constant. To classify english text you'd probably want to initialize your tokenizer like this:
+There is a default set of English stop words encoded as the `ENGLISH_STOP_WORDS` constant. To classify English text you'd probably want to initialize your tokenizer like this:
 
 ```ruby
 tokenizer=BayesClassifier::Tokenizer.new(
   BayesClassifier::Tokenizer::ENGLISH_STOP_WORDS
 )
 ```
+
+If you wanted to tokenize some markdown but handle the links and images correctly you might initialize the tokenizer like this:
+
+```
+    tokenizer = BayesClassifier::Tokenizer.new(
+                                            [""],
+                                            /[:\?!#%&3.\[\]\/+()]$/,
+                                            /\s+|\[|\]\(|!|<|>/ 
+                                            )
+```
+
+That will extract the image and url out of this: `![image](url)` 
+and the link text and url out of this `[link text](url)` and
+the url out of `<https://example.com>` that while throwing away
+all the square brackets, angle brackets, and exclamation points.
 
 
 ## Contributing
