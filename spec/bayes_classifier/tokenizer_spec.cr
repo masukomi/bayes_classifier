@@ -84,5 +84,21 @@ describe BayesClassifier::Tokenizer do
     tokens.includes?("image").should(be_true)
     tokens.includes?("https://example.com/other_link").should(be_true)
   end
+  it "should allow you to modify stop words" do
+    tokenizer = BayesClassifier::Tokenizer.new()
+    tokenizer.stop_words = [""]
+    tokenizer.stop_words.first.should(eq(""))
+    tokenizer.stop_words.size.should(eq(1))
+  end
+  it "should allow you to modify junk characters" do
+    tokenizer = BayesClassifier::Tokenizer.new()
+    tokenizer.junk_characters = /\s+/
+    tokenizer.junk_characters.should(eq(/\s+/))
+  end
+  it "should allow you to modify split regexp" do
+    tokenizer = BayesClassifier::Tokenizer.new()
+    tokenizer.junk_characters = /\W+/
+    tokenizer.junk_characters.should(eq(/\W+/))
+  end
 end
 
