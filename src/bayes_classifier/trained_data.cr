@@ -1,49 +1,52 @@
 module BayesClassifier
   class TrainedData
-    getter doc_count_of_classes, frequencies
+    getter doc_count_of_categories, frequencies
 
     def initialize
-      @doc_count_of_classes = Hash(String, Int32).new
+      @doc_count_of_categories = Hash(String, Int32).new
       @frequencies = Hash(String, Hash(String, Int32)).new
     end
 
-    def increase_class(class_name : String, byAmount : Int = 1)
-      @doc_count_of_classes[class_name] = @doc_count_of_classes.fetch(class_name, 0) + 1
+    def increase_category(category_name : String, byAmount : Int = 1)
+      @doc_count_of_categories[category_name] = \
+        @doc_count_of_categories.fetch(category_name, 0) + 1
     end
 
     def increase_token(token : String,
-                       class_name : String,
-                       byAmount : Int = 1)
+                       category_name : String,
+                       byAmount : Int = 1) : Int32
       if !@frequencies.keys.any? { |key| key == token }
         @frequencies[token] = {} of String => Int32
       end
 
-      @frequencies[token][class_name] = @frequencies[token].fetch(class_name, 0) + 1
+      new_value =  @frequencies[token].fetch(category_name, 0) + 1
+      @frequencies[token][category_name] = new_value
+      new_value
     end
 
     # returns all documents count
     def get_doc_count
-      return @doc_count_of_classes.values.sum
+      return @doc_count_of_categories.values.sum
     end
 
-    # returns the names of the available classes as list
-    def get_classes : Array(String)
-      return @doc_count_of_classes.keys
+    # returns the names of the available categories as list
+    def get_categories : Array(String)
+      return @doc_count_of_categories.keys
     end
 
-    # returns document count of the class.
-    # If class is not available, it returns Nil
-    def get_class_doc_count(class_name : String) : Int32
-      return @doc_count_of_classes.fetch(class_name, 0)
+    # returns document count of the category.
+    # If category is not available, it returns Nil
+    def get_category_doc_count(category_name : String) : Int32
+      return @doc_count_of_categories.fetch(category_name, 0)
     end
 
-    def get_frequency(token : String, class_name : String) : Int32
+    def get_frequency(token : String, category_name : String) : Int32
       found_token = @frequencies[token]?
 
       if found_token.nil?
         return 0
       else
-        frequency = found_token[class_name]?
+        frequency = found_token[category_name]?
         return frequency || 0
       end
     end
