@@ -92,7 +92,7 @@ If you wanted to tokenize some markdown but handle the links and images correctl
 ```
     tokenizer = BayesClassifier::Tokenizer.new(
                                             [""],
-                                            /[:\?!#%&3.\[\]\/+()]$/,
+                                            /[:\?!#%&3.\[\]\/+()]+$/,
                                             /\s+|\[|\]\(|!|<|>/ 
                                             )
 ```
@@ -102,6 +102,11 @@ and the link text and url out of this `[link text](url)` and
 the url out of `<https://example.com>` that while throwing away
 all the square brackets, angle brackets, and exclamation points.
 
+Because parsing markdown is a fairly common thing these days, the tokenizer has a convenience method for this:
+
+```
+  tokenizer = BayesClassifier::Tokenizer.markdown_tokenizer
+```
 
 ## Contributing
 

@@ -61,7 +61,7 @@ describe BayesClassifier::Tokenizer do
   it "should allow complex splitting" do
     tokenizer = BayesClassifier::Tokenizer.new(
                                             [""],
-                                            /[:\?!#%&3.\[\]\/+()]$/,
+                                            /[:\?!#%&3.\[\]\/+()]+$/,
                                             /\s+|\[|\]\(|!|<|>/ )
     sentence="This has [a link](https://example.com) in it and an ![image](https://example.com/foo.jpg) and a <https://example.com/other_link>!"
     tokens = tokenizer.tokenize(sentence)
@@ -72,6 +72,17 @@ describe BayesClassifier::Tokenizer do
     tokens.includes?("image").should(be_true)
     tokens.includes?("https://example.com/other_link").should(be_true)
 
+  end
+  it "should provide a markdown tokenizer" do
+    tokenizer = BayesClassifier::Tokenizer.markdown_tokenizer
+    sentence="This has [a link](https://example.com) in it and an ![image](https://example.com/foo.jpg) and a <https://example.com/other_link>!"
+    tokens = tokenizer.tokenize(sentence)
+    tokens.includes?("link").should(be_true)
+    tokens.includes?("a").should(be_true)
+    tokens.includes?("https://example.com").should(be_true)
+    tokens.includes?("https://example.com/foo.jpg").should(be_true)
+    tokens.includes?("image").should(be_true)
+    tokens.includes?("https://example.com/other_link").should(be_true)
   end
 end
 
