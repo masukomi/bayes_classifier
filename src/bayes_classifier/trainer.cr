@@ -18,5 +18,11 @@ module BayesClassifier
       end
       tokens
     end
+
+    def train_many(text_category_pairs : Array(Array(String))) : Array(Array(String))
+      process_all(text_category_pairs) do | pair |
+        train(pair[0], pair[1])
+      end
+    end
   end
 end
