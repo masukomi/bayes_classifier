@@ -31,9 +31,9 @@ dependencies:
 ```crystal
 require "bayes_classifier"
 
-tokeniser = BayesClassifier::Tokeniser.new
+tokenizer = BayesClassifier::Tokenizer.new
 
-trainer = BayesClassifier::Trainer.new(tokeniser)
+trainer = BayesClassifier::Trainer.new(tokenizer)
 
 news_set = [
   {"text" => "not to eat too much is not enough to lose weight", "category" => "health"},
